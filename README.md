@@ -4,11 +4,12 @@ This is a starter kit for spring boot projects. It includes the following:
 
 - [x] A `README.md` file with a description of the project and how to run it
 - [x] Scalable folder structure
-- [ ] Authentification with JWT.
-- [ ] Auth guard for routes
+- [x] Authentification with JWT.
+- [x] Auth guard for routes
 - [x] Database setup (any)
-- [x] Swagger documentation available at `/api`
+- [ ] Swagger documentation available at `/api`
 - [ ] docker compose file for development & production
+- [ ] Test setup
 
 ## Installation
 
