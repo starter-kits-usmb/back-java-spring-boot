@@ -7,7 +7,7 @@ This is a starter kit for spring boot projects. It includes the following:
 - [x] Authentification with JWT.
 - [x] Auth guard for routes
 - [x] Database setup (any)
-- [ ] Swagger documentation available at `/api`
+- [x] Swagger documentation available at `/api`
 - [ ] docker compose file for development & production
 - [ ] Test setup
 
@@ -21,8 +21,7 @@ $ mvn install
 
 ```bash
 # start the database
-$ cd bdd
-$ docker-compose up -d
+$  docker compose -f docker-compose-dev.yml up -d
 
 # start the app in development mode
 $ mvn spring-boot:run -Dspring-boot.run.profiles=dev
