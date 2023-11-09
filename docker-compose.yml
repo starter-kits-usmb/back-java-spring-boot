@@ -1,0 +1,45 @@
+services:
+  bdd:
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=test
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d test" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+  api:
+    image: test
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - BDD_USER=postgres
+      - BDD_PASSWORD=password
+      - BDD_DATABASE=test
+      - FRONT_URL=http=//localhost:4200
+      - JWT_SECRET=azfuhvbakzjhvkvlkazvdckjlhvbkljhvazlrkkvlkazvdckjl
+      - JWT_DURATION=86400000
+    depends_on:
+      bdd:
+        condition: service_healthy
+    links:
+      - "bdd:database"
+  pgAdmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    depends_on:
+      - bdd
+    links:
+      - "bdd:database"

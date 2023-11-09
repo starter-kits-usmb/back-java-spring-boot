@@ -8,7 +8,7 @@ This is a starter kit for spring boot projects. It includes the following:
 - [x] Auth guard for routes
 - [x] Database setup (any)
 - [x] Swagger documentation available at `/api`
-- [ ] docker compose file for development & production
+- [x] docker compose file for development & production
 - [ ] Test setup
 
 ## Installation

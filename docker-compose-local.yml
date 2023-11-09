@@ -1,0 +1,29 @@
+services:
+  bdd:
+    container_name: bdd
+    image: postgres:alpine
+    volumes:
+      - volumes:
+          - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=test
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile-local
+    ports:
+      - 8080:8080
+    environment:
+      - BDD_USER=postgres
+      - BDD_PASSWORD=password
+      - BDD_DATABASE=test
+      - FRONT_URL=http=//localhost:4200
+      - JWT_SECRET=azfuhvbakzjhvkvlkazvdckjlhvbkljhvazlrkkvlkazvdckjl
+      - JWT_DURATION=86400000
+    depends_on:
+      - bdd
+    links:
+      - "bdd:database"
