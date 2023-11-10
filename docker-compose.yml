@@ -5,11 +5,11 @@ services:
     volumes:
       - ./init-db.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=test
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d test" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB}" ]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -20,12 +20,12 @@ services:
     ports:
       - 8080:8080
     environment:
-      - BDD_USER=postgres
-      - BDD_PASSWORD=password
-      - BDD_DATABASE=test
-      - FRONT_URL=http=//localhost:4200
-      - JWT_SECRET=azfuhvbakzjhvkvlkazvdckjlhvbkljhvazlrkkvlkazvdckjl
-      - JWT_DURATION=86400000
+      - BDD_USER=${POSTGRES_USER}
+      - BDD_PASSWORD=${POSTGRES_PASSWORD}
+      - BDD_DATABASE=${POSTGRES_DB}
+      - FRONT_URL=${FRONT_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_DURATION=${JWT_DURATION}
     depends_on:
       bdd:
         condition: service_healthy
@@ -37,8 +37,8 @@ services:
     ports:
       - 80:80
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
-      - PGADMIN_DEFAULT_PASSWORD=password
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     depends_on:
       - bdd
     links:
