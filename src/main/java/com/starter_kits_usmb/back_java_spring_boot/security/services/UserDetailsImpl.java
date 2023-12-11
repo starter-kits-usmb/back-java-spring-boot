@@ -1,6 +1,7 @@
 package com.starter_kits_usmb.back_java_spring_boot.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starter_kits_usmb.back_java_spring_boot.role.ERole;
 import com.starter_kits_usmb.back_java_spring_boot.user.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+    private static final Collection<? extends GrantedAuthority> USER_AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    private static final Collection<? extends GrantedAuthority> ADMIN_AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -25,29 +28,30 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private final String password;
 
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final ERole role;
 
-    public UserDetailsImpl(Long id, String username, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String password, ERole role) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
+        this.role = role;
     }
 
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName().name()));
 
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                authorities);
+                user.getRole().getName());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        if (role == ERole.ADMIN) {
+            return ADMIN_AUTHORITIES;
+        }
+        return USER_AUTHORITIES;
     }
 
     @Override

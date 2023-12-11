@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -33,7 +34,9 @@ public class ExempleController {
         return exempleRepository.findById(id);
     }
 
+    // protect the route with role admin
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new exemple")
     public Exemple createExemple(@Valid @RequestBody ExempleCreateDTO exempleDTO) {
@@ -45,6 +48,7 @@ public class ExempleController {
     }
 
     @PutMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update the exemple")
     public Optional<Exemple> updateExemple(@Valid @RequestBody Exemple exemple) {
@@ -55,6 +59,7 @@ public class ExempleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an exemple")
     public void deleteExempleById(@PathVariable long id) {
