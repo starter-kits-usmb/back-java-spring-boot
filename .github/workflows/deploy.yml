@@ -19,6 +19,4 @@ jobs:
         ip: ${{ secrets.OVH_IP }}
       run: |
         echo "$key" > ./key
-        ssh debian@"$ip" -i ./key
-        touch test.txt
-
+        ssh -i ./key debian@"$ip" 'touch test.txt'
