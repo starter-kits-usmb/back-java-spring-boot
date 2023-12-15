@@ -19,4 +19,5 @@ jobs:
         ip: ${{ secrets.OVH_IP }}
       run: |
         echo "$key" > ./key
+        chmod 600 ./key
         ssh -o StrictHostKeyChecking=no -i ./key debian@"$ip" 'touch test.txt'
