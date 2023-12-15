@@ -20,4 +20,9 @@ jobs:
       run: |
         echo "$key" > ./key
         chmod 600 ./key
-        ssh -o StrictHostKeyChecking=no -i ./key debian@"$ip" 'touch test.txt'
+
+        # Update Docker Compose file on the remote server
+        scp -i ./key ./docker-compose.yml debian@"$ip":./docker-compose.yml
+
+        # Pull the latest images and restart the Docker services
+        ssh -o StrictHostKeyChecking=no -i ./key debian@"$ip" 'docker-compose pull && docker-compose up -d'
