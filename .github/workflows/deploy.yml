@@ -18,9 +18,7 @@ jobs:
         key: ${{ secrets.OVH_KEY }}
         ip: ${{ secrets.OVH_IP }}
       run: |
-        touch ~/.ssh/id_rsa
-        echo $key > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh debian@$ip
+        echo $key > ./key
+        ssh debian@$ip -i ./key
         touch test.txt
 
