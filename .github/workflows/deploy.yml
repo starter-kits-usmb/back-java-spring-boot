@@ -1,0 +1,28 @@
+name: Deploy to OVH VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Deploy to OVH VPS
+      env:
+        key: ${{ secrets.OVH_KEY }}
+        ip: ${{ secrets.OVH_IP }}
+      run: |
+        echo "$key" > ./key
+        chmod 600 ./key
+
+        # Update Docker Compose file on the remote server
+        scp -i ./key ./docker-compose.yml debian@"$ip":./docker-compose.yml
+
+        # Pull the latest images and restart the Docker services
+        ssh -o StrictHostKeyChecking=no -i ./key debian@"$ip" 'docker-compose pull && docker-compose up -d'
